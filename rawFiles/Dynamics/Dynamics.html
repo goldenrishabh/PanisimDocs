@@ -333,7 +333,14 @@ Tip
 <h2 class="anchored" data-anchor-id="state-representation">State Representation</h2>
 <p>The vessel state is represented as a vector combining velocities, position, orientation, control surface angles, and thruster states:</p>
 <p><span class="math inline">\(\text{state} = [\nu^T, \eta_{pos}^T, \eta_{rot}^T, \delta^T, n^T]^T\)</span></p>
-<p>Where: - <span class="math inline">\(\nu = [u, v, w, p, q, r]^T\)</span> are the linear and angular velocities in the body frame - <span class="math inline">\(\eta_{pos} = [x, y, z]^T\)</span> is the position in the NED frame - <span class="math inline">\(\eta_{rot}\)</span> is the orientation, either as Euler angles <span class="math inline">\([\phi, \theta, \psi]^T\)</span> or quaternion <span class="math inline">\([q_0, q_1, q_2, q_3]^T\)</span> - <span class="math inline">\(\delta\)</span> is the vector of control surface angles - <span class="math inline">\(n\)</span> is the vector of thruster rotational speeds (RPM)</p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">\(\nu = [u, v, w, p, q, r]^T\)</span> are the linear and angular velocities in the body frame</li>
+<li><span class="math inline">\(\eta_{pos} = [x, y, z]^T\)</span> is the position in the NED frame</li>
+<li><span class="math inline">\(\eta_{rot}\)</span> is the orientation, either as Euler angles <span class="math inline">\([\phi, \theta, \psi]^T\)</span> or quaternion <span class="math inline">\([q_0, q_1, q_2, q_3]^T\)</span></li>
+<li><span class="math inline">\(\delta\)</span> is the vector of control surface angles</li>
+<li><span class="math inline">\(n\)</span> is the vector of thruster rotational speeds (RPM)</li>
+</ul>
 </section>
 <section id="components-of-the-dynamic-equation" class="level2">
 <h2 class="anchored" data-anchor-id="components-of-the-dynamic-equation">Components of the Dynamic Equation</h2>
@@ -365,7 +372,14 @@ Tip
 <h4 class="anchored" data-anchor-id="rigid-body-mass-matrix-m_rb">Rigid-body Mass Matrix (<span class="math inline">\(M_{RB}\)</span>)</h4>
 <p>The rigid-body mass matrix is generated in the <code>_generate_mass_matrix</code> method in <code>calculate_hydrodynamics.py</code>:</p>
 <p><span class="math display">\[M_{RB} = \begin{bmatrix} m I_{3 \times 3} &amp; -m S(r_G) \\ m S(r_G) &amp; I_G \end{bmatrix}\]</span></p>
-<p>Where: - <span class="math inline">\(m\)</span> is the vessel mass - <span class="math inline">\(I_{3 \times 3}\)</span> is the 3×3 identity matrix - <span class="math inline">\(r_G\)</span> is the center of gravity vector relative to the origin of the body frame - <span class="math inline">\(S(r_G)\)</span> is the skew-symmetric matrix of <span class="math inline">\(r_G\)</span> (implemented by <code>Smat()</code> in <code>module_kinematics.py</code>) - <span class="math inline">\(I_G\)</span> is the inertia tensor calculated from the radii of gyration</p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">\(m\)</span> is the vessel mass</li>
+<li><span class="math inline">\(I_{3 \times 3}\)</span> is the 3×3 identity matrix</li>
+<li><span class="math inline">\(r_G\)</span> is the center of gravity vector relative to the origin of the body frame</li>
+<li><span class="math inline">\(S(r_G)\)</span> is the skew-symmetric matrix of <span class="math inline">\(r_G\)</span> (implemented by <code>Smat()</code> in <code>module_kinematics.py</code>)</li>
+<li><span class="math inline">\(I_G\)</span> is the inertia tensor calculated from the radii of gyration</li>
+</ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _generate_mass_matrix(<span class="va">self</span>, CG, mass, gyration):</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate gyration tensor about vessel frame</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    xprdct2 <span class="op">=</span> np.diag(gyration)<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> Smat(CG)<span class="op">@</span>Smat(CG)</span>
@@ -1427,303 +1441,305 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>$\text{state} = <span class="co">[</span><span class="ot">\nu^T, \eta_{pos}^T, \eta_{rot}^T, \delta^T, n^T</span><span class="co">]</span>^T$</span>
 <span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>Where:</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$\nu = <span class="co">[</span><span class="ot">u, v, w, p, q, r</span><span class="co">]</span>^T$ are the linear and angular velocities in the body frame</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$\eta_{pos} = <span class="co">[</span><span class="ot">x, y, z</span><span class="co">]</span>^T$ is the position in the NED frame</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$\eta_{rot}$ is the orientation, either as Euler angles $<span class="co">[</span><span class="ot">\phi, \theta, \psi</span><span class="co">]</span>^T$ or quaternion $<span class="co">[</span><span class="ot">q_0, q_1, q_2, q_3</span><span class="co">]</span>^T$</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$\delta$ is the vector of control surface angles</span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$n$ is the vector of thruster rotational speeds (RPM)</span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="fu">## Components of the Dynamic Equation</span></span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="in">graph TD</span></span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="in">    A[Mass Matrix M] --&gt; EOM[Equation of Motion]</span></span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="in">    B[Coriolis Matrix C] --&gt; EOM</span></span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="in">    C[Damping Matrix D] --&gt; EOM</span></span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="in">    D[Restoring Forces g] --&gt; EOM</span></span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="in">    E[Control Forces τ] --&gt; EOM</span></span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a><span class="in">    EOM --&gt; ODE[vessel_ode]</span></span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a><span class="in">    ODE --&gt; IV[solve_ivp]</span></span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a><span class="in">    IV --&gt; ST[Vessel State]</span></span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a><span class="fu">### Mass Matrix ($M$)</span></span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>The mass matrix $M$ combines the rigid-body inertia matrix $M_{RB}$ and the added mass matrix $M_A$:</span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>$$M = M_{RB} + M_A$$</span>
-<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Rigid-body Mass Matrix ($M_{RB}$)</span></span>
-<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>The rigid-body mass matrix is generated in the <span class="in">`_generate_mass_matrix`</span> method in <span class="in">`calculate_hydrodynamics.py`</span>:</span>
-<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>$$M_{RB} = \begin{bmatrix} m I_{3 \times 3} &amp; -m S(r_G) <span class="sc">\\</span> m S(r_G) &amp; I_G \end{bmatrix}$$</span>
-<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>Where:</span>
-<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$m$ is the vessel mass</span>
-<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$I_{3 \times 3}$ is the 3×3 identity matrix</span>
-<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$r_G$ is the center of gravity vector relative to the origin of the body frame</span>
-<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$S(r_G)$ is the skew-symmetric matrix of $r_G$ (implemented by <span class="in">`Smat()`</span> in <span class="in">`module_kinematics.py`</span>)</span>
-<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$I_G$ is the inertia tensor calculated from the radii of gyration</span>
-<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
-<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _generate_mass_matrix(<span class="va">self</span>, CG, mass, gyration):</span>
-<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate gyration tensor about vessel frame</span></span>
-<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>    xprdct2 <span class="op">=</span> np.diag(gyration)<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> Smat(CG)<span class="op">@</span>Smat(CG)</span>
-<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate the inertia matrix using radii of gyration</span></span>
-<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>    inertia_matrix <span class="op">=</span> xprdct2 <span class="op">*</span> mass</span>
-<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate the mass matrix</span></span>
-<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a>    mass_matrix <span class="op">=</span> np.zeros((<span class="dv">6</span>,<span class="dv">6</span>))</span>
-<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a>    mass_matrix[<span class="dv">0</span>:<span class="dv">3</span>][:, <span class="dv">0</span>:<span class="dv">3</span>] <span class="op">=</span> mass <span class="op">*</span> np.eye(<span class="dv">3</span>)</span>
-<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a>    mass_matrix[<span class="dv">3</span>:<span class="dv">6</span>][:, <span class="dv">3</span>:<span class="dv">6</span>] <span class="op">=</span> inertia_matrix</span>
-<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a>    mass_matrix[<span class="dv">0</span>:<span class="dv">3</span>][:, <span class="dv">3</span>:<span class="dv">6</span>] <span class="op">=</span> <span class="op">-</span>Smat(CG) <span class="op">*</span> mass</span>
-<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a>    mass_matrix[<span class="dv">3</span>:<span class="dv">6</span>][:, <span class="dv">0</span>:<span class="dv">3</span>] <span class="op">=</span> Smat(CG) <span class="op">*</span> mass</span>
-<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> mass_matrix</span>
-<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Added Mass Matrix ($M_A$)</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$\nu = <span class="co">[</span><span class="ot">u, v, w, p, q, r</span><span class="co">]</span>^T$ are the linear and angular velocities in the body frame</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$\eta_{pos} = <span class="co">[</span><span class="ot">x, y, z</span><span class="co">]</span>^T$ is the position in the NED frame</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$\eta_{rot}$ is the orientation, either as Euler angles $<span class="co">[</span><span class="ot">\phi, \theta, \psi</span><span class="co">]</span>^T$ or quaternion $<span class="co">[</span><span class="ot">q_0, q_1, q_2, q_3</span><span class="co">]</span>^T$</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$\delta$ is the vector of control surface angles</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$n$ is the vector of thruster rotational speeds (RPM)</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="fu">## Components of the Dynamic Equation</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="in">graph TD</span></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="in">    A[Mass Matrix M] --&gt; EOM[Equation of Motion]</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="in">    B[Coriolis Matrix C] --&gt; EOM</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="in">    C[Damping Matrix D] --&gt; EOM</span></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="in">    D[Restoring Forces g] --&gt; EOM</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a><span class="in">    E[Control Forces τ] --&gt; EOM</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a><span class="in">    EOM --&gt; ODE[vessel_ode]</span></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a><span class="in">    ODE --&gt; IV[solve_ivp]</span></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a><span class="in">    IV --&gt; ST[Vessel State]</span></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a><span class="fu">### Mass Matrix ($M$)</span></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>The mass matrix $M$ combines the rigid-body inertia matrix $M_{RB}$ and the added mass matrix $M_A$:</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>$$M = M_{RB} + M_A$$</span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Rigid-body Mass Matrix ($M_{RB}$)</span></span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>The rigid-body mass matrix is generated in the <span class="in">`_generate_mass_matrix`</span> method in <span class="in">`calculate_hydrodynamics.py`</span>:</span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>$$M_{RB} = \begin{bmatrix} m I_{3 \times 3} &amp; -m S(r_G) <span class="sc">\\</span> m S(r_G) &amp; I_G \end{bmatrix}$$</span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>Where:</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$m$ is the vessel mass</span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$I_{3 \times 3}$ is the 3×3 identity matrix</span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$r_G$ is the center of gravity vector relative to the origin of the body frame</span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$S(r_G)$ is the skew-symmetric matrix of $r_G$ (implemented by <span class="in">`Smat()`</span> in <span class="in">`module_kinematics.py`</span>)</span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$I_G$ is the inertia tensor calculated from the radii of gyration</span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _generate_mass_matrix(<span class="va">self</span>, CG, mass, gyration):</span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate gyration tensor about vessel frame</span></span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>    xprdct2 <span class="op">=</span> np.diag(gyration)<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> Smat(CG)<span class="op">@</span>Smat(CG)</span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate the inertia matrix using radii of gyration</span></span>
+<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a>    inertia_matrix <span class="op">=</span> xprdct2 <span class="op">*</span> mass</span>
+<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate the mass matrix</span></span>
+<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a>    mass_matrix <span class="op">=</span> np.zeros((<span class="dv">6</span>,<span class="dv">6</span>))</span>
+<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a>    mass_matrix[<span class="dv">0</span>:<span class="dv">3</span>][:, <span class="dv">0</span>:<span class="dv">3</span>] <span class="op">=</span> mass <span class="op">*</span> np.eye(<span class="dv">3</span>)</span>
+<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a>    mass_matrix[<span class="dv">3</span>:<span class="dv">6</span>][:, <span class="dv">3</span>:<span class="dv">6</span>] <span class="op">=</span> inertia_matrix</span>
+<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a>    mass_matrix[<span class="dv">0</span>:<span class="dv">3</span>][:, <span class="dv">3</span>:<span class="dv">6</span>] <span class="op">=</span> <span class="op">-</span>Smat(CG) <span class="op">*</span> mass</span>
+<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a>    mass_matrix[<span class="dv">3</span>:<span class="dv">6</span>][:, <span class="dv">0</span>:<span class="dv">3</span>] <span class="op">=</span> Smat(CG) <span class="op">*</span> mass</span>
+<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> mass_matrix</span>
+<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a>The added mass matrix represents the added inertia due to accelerating the surrounding fluid. It's calculated from hydrodynamic data obtained from <span class="co">[</span><span class="ot">HydRA</span><span class="co">](https://hydra.hydratech.in/)</span> (You can also enter custom hydrodynamics added mass coefficients (example Y_vd) in the <span class="in">`hydrodynamics.yml`</span> input file instead of using HydRA, as discussed in the <span class="co">[</span><span class="ot">Inputs</span><span class="co">](../Inputs/inputs.qmd)</span> section).</span>
+<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Added Mass Matrix ($M_A$)</span></span>
 <span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a>$$M_A = \begin{bmatrix} A_{11} &amp; A_{12} <span class="sc">\\</span> A_{21} &amp; A_{22} \end{bmatrix}$$</span>
+<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a>The added mass matrix represents the added inertia due to accelerating the surrounding fluid. It's calculated from hydrodynamic data obtained from <span class="co">[</span><span class="ot">HydRA</span><span class="co">](https://hydra.hydratech.in/)</span> (You can also enter custom hydrodynamics added mass coefficients (example Y_vd) in the <span class="in">`hydrodynamics.yml`</span> input file instead of using HydRA, as discussed in the <span class="co">[</span><span class="ot">Inputs</span><span class="co">](../Inputs/inputs.qmd)</span> section).</span>
 <span id="cb5-94"><a href="#cb5-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-95"><a href="#cb5-95" aria-hidden="true" tabindex="-1"></a>| Function | Description |</span>
-<span id="cb5-96"><a href="#cb5-96" aria-hidden="true" tabindex="-1"></a>|----------|-------------|</span>
-<span id="cb5-97"><a href="#cb5-97" aria-hidden="true" tabindex="-1"></a>| <span class="in">`calculate_added_mass_from_hydra(hydra_file)`</span> | Computes the added mass matrix from HydRA data file containing frequency-dependent hydrodynamic coefficients. Extracts zero-frequency added mass for most terms, but computes heave, roll, and pitch terms at their natural frequencies for better accuracy. |</span>
-<span id="cb5-98"><a href="#cb5-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-99"><a href="#cb5-99" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
-<span id="cb5-100"><a href="#cb5-100" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calculate_added_mass_from_hydra(<span class="va">self</span>, hydra_file):</span>
-<span id="cb5-101"><a href="#cb5-101" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Load hydrodynamic data</span></span>
-<span id="cb5-102"><a href="#cb5-102" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(hydra_file, <span class="st">'r'</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
-<span id="cb5-103"><a href="#cb5-103" aria-hidden="true" tabindex="-1"></a>        mdict <span class="op">=</span> json.load(<span class="bu">file</span>)</span>
-<span id="cb5-104"><a href="#cb5-104" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-105"><a href="#cb5-105" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract arrays from data</span></span>
-<span id="cb5-106"><a href="#cb5-106" aria-hidden="true" tabindex="-1"></a>    omg <span class="op">=</span> np.array(mdict[<span class="st">'w'</span>])      <span class="co"># Frequency array</span></span>
-<span id="cb5-107"><a href="#cb5-107" aria-hidden="true" tabindex="-1"></a>    AM <span class="op">=</span> np.array(mdict[<span class="st">'AM'</span>])      <span class="co"># Added mass array</span></span>
-<span id="cb5-108"><a href="#cb5-108" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-109"><a href="#cb5-109" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract zero-frequency added mass</span></span>
-<span id="cb5-110"><a href="#cb5-110" aria-hidden="true" tabindex="-1"></a>    A_zero <span class="op">=</span> AM[<span class="dv">1</span>, :, :, <span class="dv">0</span>, <span class="dv">0</span>]</span>
-<span id="cb5-111"><a href="#cb5-111" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-112"><a href="#cb5-112" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate natural frequencies and</span></span>
-<span id="cb5-113"><a href="#cb5-113" aria-hidden="true" tabindex="-1"></a>    <span class="co"># interpolate added mass at those frequencies</span></span>
-<span id="cb5-114"><a href="#cb5-114" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ...</span></span>
-<span id="cb5-115"><a href="#cb5-115" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-116"><a href="#cb5-116" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Return properly transformed added mass matrix</span></span>
-<span id="cb5-117"><a href="#cb5-117" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> A</span>
-<span id="cb5-118"><a href="#cb5-118" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb5-119"><a href="#cb5-119" aria-hidden="true" tabindex="-1"></a>:::{.callout-note}</span>
-<span id="cb5-120"><a href="#cb5-120" aria-hidden="true" tabindex="-1"></a>The added mass calculated from HydRA is in ENU frame and so it is converted to NED frame in the <span class="in">`calculate_added_mass_from_hydra`</span> function.</span>
-<span id="cb5-121"><a href="#cb5-121" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb5-122"><a href="#cb5-122" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-123"><a href="#cb5-123" aria-hidden="true" tabindex="-1"></a><span class="fu">### Coriolis and Centripetal Matrix </span></span>
+<span id="cb5-95"><a href="#cb5-95" aria-hidden="true" tabindex="-1"></a>$$M_A = \begin{bmatrix} A_{11} &amp; A_{12} <span class="sc">\\</span> A_{21} &amp; A_{22} \end{bmatrix}$$</span>
+<span id="cb5-96"><a href="#cb5-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-97"><a href="#cb5-97" aria-hidden="true" tabindex="-1"></a>| Function | Description |</span>
+<span id="cb5-98"><a href="#cb5-98" aria-hidden="true" tabindex="-1"></a>|----------|-------------|</span>
+<span id="cb5-99"><a href="#cb5-99" aria-hidden="true" tabindex="-1"></a>| <span class="in">`calculate_added_mass_from_hydra(hydra_file)`</span> | Computes the added mass matrix from HydRA data file containing frequency-dependent hydrodynamic coefficients. Extracts zero-frequency added mass for most terms, but computes heave, roll, and pitch terms at their natural frequencies for better accuracy. |</span>
+<span id="cb5-100"><a href="#cb5-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-101"><a href="#cb5-101" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
+<span id="cb5-102"><a href="#cb5-102" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calculate_added_mass_from_hydra(<span class="va">self</span>, hydra_file):</span>
+<span id="cb5-103"><a href="#cb5-103" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Load hydrodynamic data</span></span>
+<span id="cb5-104"><a href="#cb5-104" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(hydra_file, <span class="st">'r'</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="cb5-105"><a href="#cb5-105" aria-hidden="true" tabindex="-1"></a>        mdict <span class="op">=</span> json.load(<span class="bu">file</span>)</span>
+<span id="cb5-106"><a href="#cb5-106" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-107"><a href="#cb5-107" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract arrays from data</span></span>
+<span id="cb5-108"><a href="#cb5-108" aria-hidden="true" tabindex="-1"></a>    omg <span class="op">=</span> np.array(mdict[<span class="st">'w'</span>])      <span class="co"># Frequency array</span></span>
+<span id="cb5-109"><a href="#cb5-109" aria-hidden="true" tabindex="-1"></a>    AM <span class="op">=</span> np.array(mdict[<span class="st">'AM'</span>])      <span class="co"># Added mass array</span></span>
+<span id="cb5-110"><a href="#cb5-110" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-111"><a href="#cb5-111" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract zero-frequency added mass</span></span>
+<span id="cb5-112"><a href="#cb5-112" aria-hidden="true" tabindex="-1"></a>    A_zero <span class="op">=</span> AM[<span class="dv">1</span>, :, :, <span class="dv">0</span>, <span class="dv">0</span>]</span>
+<span id="cb5-113"><a href="#cb5-113" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-114"><a href="#cb5-114" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate natural frequencies and</span></span>
+<span id="cb5-115"><a href="#cb5-115" aria-hidden="true" tabindex="-1"></a>    <span class="co"># interpolate added mass at those frequencies</span></span>
+<span id="cb5-116"><a href="#cb5-116" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ...</span></span>
+<span id="cb5-117"><a href="#cb5-117" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-118"><a href="#cb5-118" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Return properly transformed added mass matrix</span></span>
+<span id="cb5-119"><a href="#cb5-119" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> A</span>
+<span id="cb5-120"><a href="#cb5-120" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-121"><a href="#cb5-121" aria-hidden="true" tabindex="-1"></a>:::{.callout-note}</span>
+<span id="cb5-122"><a href="#cb5-122" aria-hidden="true" tabindex="-1"></a>The added mass calculated from HydRA is in ENU frame and so it is converted to NED frame in the <span class="in">`calculate_added_mass_from_hydra`</span> function.</span>
+<span id="cb5-123"><a href="#cb5-123" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb5-124"><a href="#cb5-124" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-125"><a href="#cb5-125" aria-hidden="true" tabindex="-1"></a>The Coriolis matrix ($C(\nu)$) accounts for forces arising from motion in a rotating reference frame (Body frame is rotating with respect to NED frame):</span>
+<span id="cb5-125"><a href="#cb5-125" aria-hidden="true" tabindex="-1"></a><span class="fu">### Coriolis and Centripetal Matrix </span></span>
 <span id="cb5-126"><a href="#cb5-126" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-127"><a href="#cb5-127" aria-hidden="true" tabindex="-1"></a>$$C(\nu) = C_{RB}(\nu) + C_A(\nu)$$</span>
+<span id="cb5-127"><a href="#cb5-127" aria-hidden="true" tabindex="-1"></a>The Coriolis matrix ($C(\nu)$) accounts for forces arising from motion in a rotating reference frame (Body frame is rotating with respect to NED frame):</span>
 <span id="cb5-128"><a href="#cb5-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-129"><a href="#cb5-129" aria-hidden="true" tabindex="-1"></a>These matrices are calculated using:</span>
+<span id="cb5-129"><a href="#cb5-129" aria-hidden="true" tabindex="-1"></a>$$C(\nu) = C_{RB}(\nu) + C_A(\nu)$$</span>
 <span id="cb5-130"><a href="#cb5-130" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-131"><a href="#cb5-131" aria-hidden="true" tabindex="-1"></a>$$C_{RB}(\nu) = \begin{bmatrix} 0_{3 \times 3} &amp; -S(M_{11} v_1 + M_{12} v_2) <span class="sc">\\</span> </span>
-<span id="cb5-132"><a href="#cb5-132" aria-hidden="true" tabindex="-1"></a>-S(M_{11} v_1 + M_{12} v_2) &amp; -S(M_{21} v_1 + M_{22} v_2) \end{bmatrix}$$</span>
-<span id="cb5-133"><a href="#cb5-133" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-134"><a href="#cb5-134" aria-hidden="true" tabindex="-1"></a>$$C_A(\nu) = \begin{bmatrix} 0_{3 \times 3} &amp; -S(A_{11} v_1 + A_{12} v_2) <span class="sc">\\</span> </span>
-<span id="cb5-135"><a href="#cb5-135" aria-hidden="true" tabindex="-1"></a>-S(A_{11} v_1 + A_{12} v_2) &amp; -S(A_{21} v_1 + A_{22} v_2) \end{bmatrix}$$</span>
-<span id="cb5-136"><a href="#cb5-136" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-137"><a href="#cb5-137" aria-hidden="true" tabindex="-1"></a>Where $v_1 = <span class="co">[</span><span class="ot">u, v, w</span><span class="co">]</span>^T$ and $v_2 = <span class="co">[</span><span class="ot">p, q, r</span><span class="co">]</span>^T$ are the linear and angular velocity components of $\nu$.</span>
+<span id="cb5-131"><a href="#cb5-131" aria-hidden="true" tabindex="-1"></a>These matrices are calculated using:</span>
+<span id="cb5-132"><a href="#cb5-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-133"><a href="#cb5-133" aria-hidden="true" tabindex="-1"></a>$$C_{RB}(\nu) = \begin{bmatrix} 0_{3 \times 3} &amp; -S(M_{11} v_1 + M_{12} v_2) <span class="sc">\\</span> </span>
+<span id="cb5-134"><a href="#cb5-134" aria-hidden="true" tabindex="-1"></a>-S(M_{11} v_1 + M_{12} v_2) &amp; -S(M_{21} v_1 + M_{22} v_2) \end{bmatrix}$$</span>
+<span id="cb5-135"><a href="#cb5-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-136"><a href="#cb5-136" aria-hidden="true" tabindex="-1"></a>$$C_A(\nu) = \begin{bmatrix} 0_{3 \times 3} &amp; -S(A_{11} v_1 + A_{12} v_2) <span class="sc">\\</span> </span>
+<span id="cb5-137"><a href="#cb5-137" aria-hidden="true" tabindex="-1"></a>-S(A_{11} v_1 + A_{12} v_2) &amp; -S(A_{21} v_1 + A_{22} v_2) \end{bmatrix}$$</span>
 <span id="cb5-138"><a href="#cb5-138" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-139"><a href="#cb5-139" aria-hidden="true" tabindex="-1"></a>| Function | Description |</span>
-<span id="cb5-140"><a href="#cb5-140" aria-hidden="true" tabindex="-1"></a>|----------|-------------|</span>
-<span id="cb5-141"><a href="#cb5-141" aria-hidden="true" tabindex="-1"></a>| <span class="in">`calculate_coriolis_matrices(vel)`</span> | Computes the rigid body and added mass Coriolis-centripetal matrices based on the current velocity state. Returns a tuple of $(C_{RB}, C_A)$ matrices. |</span>
-<span id="cb5-142"><a href="#cb5-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-143"><a href="#cb5-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-144"><a href="#cb5-144" aria-hidden="true" tabindex="-1"></a><span class="fu">### Damping Matrix </span></span>
+<span id="cb5-139"><a href="#cb5-139" aria-hidden="true" tabindex="-1"></a>Where $v_1 = <span class="co">[</span><span class="ot">u, v, w</span><span class="co">]</span>^T$ and $v_2 = <span class="co">[</span><span class="ot">p, q, r</span><span class="co">]</span>^T$ are the linear and angular velocity components of $\nu$.</span>
+<span id="cb5-140"><a href="#cb5-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-141"><a href="#cb5-141" aria-hidden="true" tabindex="-1"></a>| Function | Description |</span>
+<span id="cb5-142"><a href="#cb5-142" aria-hidden="true" tabindex="-1"></a>|----------|-------------|</span>
+<span id="cb5-143"><a href="#cb5-143" aria-hidden="true" tabindex="-1"></a>| <span class="in">`calculate_coriolis_matrices(vel)`</span> | Computes the rigid body and added mass Coriolis-centripetal matrices based on the current velocity state. Returns a tuple of $(C_{RB}, C_A)$ matrices. |</span>
+<span id="cb5-144"><a href="#cb5-144" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-145"><a href="#cb5-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-146"><a href="#cb5-146" aria-hidden="true" tabindex="-1"></a>The damping matrix ($D(\nu)$) represents hydrodynamic resistance forces and is typically modeled as:</span>
+<span id="cb5-146"><a href="#cb5-146" aria-hidden="true" tabindex="-1"></a><span class="fu">### Damping Matrix </span></span>
 <span id="cb5-147"><a href="#cb5-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-148"><a href="#cb5-148" aria-hidden="true" tabindex="-1"></a>$$D(\nu) = D_{linear} + D_{nonlinear}(\nu)$$</span>
+<span id="cb5-148"><a href="#cb5-148" aria-hidden="true" tabindex="-1"></a>The damping matrix ($D(\nu)$) represents hydrodynamic resistance forces and is typically modeled as:</span>
 <span id="cb5-149"><a href="#cb5-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-150"><a href="#cb5-150" aria-hidden="true" tabindex="-1"></a>In the implementation, damping is handled through hydrodynamic coefficients (entered in the <span class="in">`hydrodynamics.yml`</span> input file) rather than an explicit matrix:</span>
+<span id="cb5-150"><a href="#cb5-150" aria-hidden="true" tabindex="-1"></a>$$D(\nu) = D_{linear} + D_{nonlinear}(\nu)$$</span>
 <span id="cb5-151"><a href="#cb5-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-152"><a href="#cb5-152" aria-hidden="true" tabindex="-1"></a>| Function | Description |</span>
-<span id="cb5-153"><a href="#cb5-153" aria-hidden="true" tabindex="-1"></a>|----------|-------------|</span>
-<span id="cb5-154"><a href="#cb5-154" aria-hidden="true" tabindex="-1"></a>| <span class="in">`hydrodynamic_forces(vel)`</span> | Computes hydrodynamic damping forces by applying coefficients to velocity components. Supports linear, quadratic, and cross-terms. |</span>
-<span id="cb5-155"><a href="#cb5-155" aria-hidden="true" tabindex="-1"></a>| <span class="in">`cross_flow_drag()`</span> | Estimates sway-yaw damping coefficients for surface vessels using strip theory and Hoerner's cross-flow drag. |</span>
-<span id="cb5-156"><a href="#cb5-156" aria-hidden="true" tabindex="-1"></a>| <span class="in">`cross_flow_drag_AUV()`</span> | Similar to <span class="in">`cross_flow_drag()`</span> but includes heave-pitch calculations for AUVs. |</span>
-<span id="cb5-157"><a href="#cb5-157" aria-hidden="true" tabindex="-1"></a>| <span class="in">`hoerner()`</span> | Implements Hoerner's method for computing 2D drag coefficients based on section beam-to-draft ratio. |</span>
-<span id="cb5-158"><a href="#cb5-158" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-159"><a href="#cb5-159" aria-hidden="true" tabindex="-1"></a>The coefficients follow a naming convention that indicates which force/moment they affect and which velocity components are involved (you can enter any custom hydrodynamic coefficients in the <span class="in">`hydrodynamics.yml`</span> input file and it will be handled by the function for force calculations):</span>
+<span id="cb5-152"><a href="#cb5-152" aria-hidden="true" tabindex="-1"></a>In the implementation, damping is handled through hydrodynamic coefficients (entered in the <span class="in">`hydrodynamics.yml`</span> input file) rather than an explicit matrix:</span>
+<span id="cb5-153"><a href="#cb5-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-154"><a href="#cb5-154" aria-hidden="true" tabindex="-1"></a>| Function | Description |</span>
+<span id="cb5-155"><a href="#cb5-155" aria-hidden="true" tabindex="-1"></a>|----------|-------------|</span>
+<span id="cb5-156"><a href="#cb5-156" aria-hidden="true" tabindex="-1"></a>| <span class="in">`hydrodynamic_forces(vel)`</span> | Computes hydrodynamic damping forces by applying coefficients to velocity components. Supports linear, quadratic, and cross-terms. |</span>
+<span id="cb5-157"><a href="#cb5-157" aria-hidden="true" tabindex="-1"></a>| <span class="in">`cross_flow_drag()`</span> | Estimates sway-yaw damping coefficients for surface vessels using strip theory and Hoerner's cross-flow drag. |</span>
+<span id="cb5-158"><a href="#cb5-158" aria-hidden="true" tabindex="-1"></a>| <span class="in">`cross_flow_drag_AUV()`</span> | Similar to <span class="in">`cross_flow_drag()`</span> but includes heave-pitch calculations for AUVs. |</span>
+<span id="cb5-159"><a href="#cb5-159" aria-hidden="true" tabindex="-1"></a>| <span class="in">`hoerner()`</span> | Implements Hoerner's method for computing 2D drag coefficients based on section beam-to-draft ratio. |</span>
 <span id="cb5-160"><a href="#cb5-160" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-161"><a href="#cb5-161" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Linear damping: <span class="in">`X_u`</span>, <span class="in">`Y_v`</span>, <span class="in">`Z_w`</span>, <span class="in">`K_p`</span>, <span class="in">`M_q`</span>, <span class="in">`N_r`</span></span>
-<span id="cb5-162"><a href="#cb5-162" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Quadratic damping: <span class="in">`X_u_au`</span>, <span class="in">`Y_v_av`</span>, <span class="in">`Z_w_aw`</span>, etc. (the <span class="in">`a`</span> indicates absolute value)</span>
-<span id="cb5-163"><a href="#cb5-163" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Cross-coupling: <span class="in">`X_vr`</span>, <span class="in">`Y_ur`</span>, <span class="in">`N_uv`</span>, etc.</span>
-<span id="cb5-164"><a href="#cb5-164" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-165"><a href="#cb5-165" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
-<span id="cb5-166"><a href="#cb5-166" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hydrodynamic_forces(<span class="va">self</span>, vel):</span>
-<span id="cb5-167"><a href="#cb5-167" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract velocities</span></span>
-<span id="cb5-168"><a href="#cb5-168" aria-hidden="true" tabindex="-1"></a>    u, v, w, p, q, r <span class="op">=</span> vel</span>
-<span id="cb5-169"><a href="#cb5-169" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-170"><a href="#cb5-170" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initialize forces vector</span></span>
-<span id="cb5-171"><a href="#cb5-171" aria-hidden="true" tabindex="-1"></a>    F <span class="op">=</span> np.zeros(<span class="dv">6</span>)</span>
-<span id="cb5-172"><a href="#cb5-172" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-173"><a href="#cb5-173" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Map velocity components to values</span></span>
-<span id="cb5-174"><a href="#cb5-174" aria-hidden="true" tabindex="-1"></a>    vel_map <span class="op">=</span> {<span class="st">'u'</span>: u, <span class="st">'v'</span>: v, <span class="st">'w'</span>: w, <span class="st">'p'</span>: p, <span class="st">'q'</span>: q, <span class="st">'r'</span>: r}</span>
-<span id="cb5-175"><a href="#cb5-175" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-176"><a href="#cb5-176" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Process each hydrodynamic coefficient</span></span>
-<span id="cb5-177"><a href="#cb5-177" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> coeff_name, coeff_value <span class="kw">in</span> <span class="va">self</span>.hydrodynamics.items():</span>
-<span id="cb5-178"><a href="#cb5-178" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> coeff_value <span class="op">==</span> <span class="dv">0</span>: <span class="cf">continue</span></span>
-<span id="cb5-179"><a href="#cb5-179" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb5-180"><a href="#cb5-180" aria-hidden="true" tabindex="-1"></a>        parts <span class="op">=</span> coeff_name.split(<span class="st">'_'</span>)</span>
-<span id="cb5-181"><a href="#cb5-181" aria-hidden="true" tabindex="-1"></a>        force_dir <span class="op">=</span> parts[<span class="dv">0</span>]</span>
-<span id="cb5-182"><a href="#cb5-182" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> force_dir <span class="kw">not</span> <span class="kw">in</span> <span class="va">self</span>.force_indices: <span class="cf">continue</span></span>
-<span id="cb5-183"><a href="#cb5-183" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb5-184"><a href="#cb5-184" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calculate force contribution</span></span>
-<span id="cb5-185"><a href="#cb5-185" aria-hidden="true" tabindex="-1"></a>        force <span class="op">=</span> coeff_value</span>
-<span id="cb5-186"><a href="#cb5-186" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> component <span class="kw">in</span> parts[<span class="dv">1</span>:]:</span>
-<span id="cb5-187"><a href="#cb5-187" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> component.startswith(<span class="st">'a'</span>) <span class="kw">and</span> <span class="bu">len</span>(component) <span class="op">&gt;</span> <span class="dv">1</span>:</span>
-<span id="cb5-188"><a href="#cb5-188" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Absolute value term (e.g., u|u|)</span></span>
-<span id="cb5-189"><a href="#cb5-189" aria-hidden="true" tabindex="-1"></a>                v_char <span class="op">=</span> component[<span class="dv">1</span>:]</span>
-<span id="cb5-190"><a href="#cb5-190" aria-hidden="true" tabindex="-1"></a>                force <span class="op">*=</span> <span class="bu">abs</span>(vel_map[v_char])</span>
-<span id="cb5-191"><a href="#cb5-191" aria-hidden="true" tabindex="-1"></a>            <span class="cf">elif</span> component <span class="kw">in</span> vel_map:</span>
-<span id="cb5-192"><a href="#cb5-192" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Regular term</span></span>
-<span id="cb5-193"><a href="#cb5-193" aria-hidden="true" tabindex="-1"></a>                force <span class="op">*=</span> vel_map[component]</span>
-<span id="cb5-194"><a href="#cb5-194" aria-hidden="true" tabindex="-1"></a>                </span>
-<span id="cb5-195"><a href="#cb5-195" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Add to force vector</span></span>
-<span id="cb5-196"><a href="#cb5-196" aria-hidden="true" tabindex="-1"></a>        F[<span class="va">self</span>.force_indices[force_dir]] <span class="op">+=</span> force</span>
-<span id="cb5-197"><a href="#cb5-197" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb5-198"><a href="#cb5-198" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> F</span>
-<span id="cb5-199"><a href="#cb5-199" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb5-200"><a href="#cb5-200" aria-hidden="true" tabindex="-1"></a><span class="fu">### Restoring Forces </span></span>
-<span id="cb5-201"><a href="#cb5-201" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-202"><a href="#cb5-202" aria-hidden="true" tabindex="-1"></a>The restoring forces ($g(\eta)$) include gravitational and buoyancy effects:</span>
+<span id="cb5-161"><a href="#cb5-161" aria-hidden="true" tabindex="-1"></a>The coefficients follow a naming convention that indicates which force/moment they affect and which velocity components are involved (you can enter any custom hydrodynamic coefficients in the <span class="in">`hydrodynamics.yml`</span> input file and it will be handled by the function for force calculations):</span>
+<span id="cb5-162"><a href="#cb5-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-163"><a href="#cb5-163" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Linear damping: <span class="in">`X_u`</span>, <span class="in">`Y_v`</span>, <span class="in">`Z_w`</span>, <span class="in">`K_p`</span>, <span class="in">`M_q`</span>, <span class="in">`N_r`</span></span>
+<span id="cb5-164"><a href="#cb5-164" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Quadratic damping: <span class="in">`X_u_au`</span>, <span class="in">`Y_v_av`</span>, <span class="in">`Z_w_aw`</span>, etc. (the <span class="in">`a`</span> indicates absolute value)</span>
+<span id="cb5-165"><a href="#cb5-165" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Cross-coupling: <span class="in">`X_vr`</span>, <span class="in">`Y_ur`</span>, <span class="in">`N_uv`</span>, etc.</span>
+<span id="cb5-166"><a href="#cb5-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-167"><a href="#cb5-167" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
+<span id="cb5-168"><a href="#cb5-168" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hydrodynamic_forces(<span class="va">self</span>, vel):</span>
+<span id="cb5-169"><a href="#cb5-169" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract velocities</span></span>
+<span id="cb5-170"><a href="#cb5-170" aria-hidden="true" tabindex="-1"></a>    u, v, w, p, q, r <span class="op">=</span> vel</span>
+<span id="cb5-171"><a href="#cb5-171" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-172"><a href="#cb5-172" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initialize forces vector</span></span>
+<span id="cb5-173"><a href="#cb5-173" aria-hidden="true" tabindex="-1"></a>    F <span class="op">=</span> np.zeros(<span class="dv">6</span>)</span>
+<span id="cb5-174"><a href="#cb5-174" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-175"><a href="#cb5-175" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Map velocity components to values</span></span>
+<span id="cb5-176"><a href="#cb5-176" aria-hidden="true" tabindex="-1"></a>    vel_map <span class="op">=</span> {<span class="st">'u'</span>: u, <span class="st">'v'</span>: v, <span class="st">'w'</span>: w, <span class="st">'p'</span>: p, <span class="st">'q'</span>: q, <span class="st">'r'</span>: r}</span>
+<span id="cb5-177"><a href="#cb5-177" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-178"><a href="#cb5-178" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Process each hydrodynamic coefficient</span></span>
+<span id="cb5-179"><a href="#cb5-179" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> coeff_name, coeff_value <span class="kw">in</span> <span class="va">self</span>.hydrodynamics.items():</span>
+<span id="cb5-180"><a href="#cb5-180" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> coeff_value <span class="op">==</span> <span class="dv">0</span>: <span class="cf">continue</span></span>
+<span id="cb5-181"><a href="#cb5-181" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb5-182"><a href="#cb5-182" aria-hidden="true" tabindex="-1"></a>        parts <span class="op">=</span> coeff_name.split(<span class="st">'_'</span>)</span>
+<span id="cb5-183"><a href="#cb5-183" aria-hidden="true" tabindex="-1"></a>        force_dir <span class="op">=</span> parts[<span class="dv">0</span>]</span>
+<span id="cb5-184"><a href="#cb5-184" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> force_dir <span class="kw">not</span> <span class="kw">in</span> <span class="va">self</span>.force_indices: <span class="cf">continue</span></span>
+<span id="cb5-185"><a href="#cb5-185" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb5-186"><a href="#cb5-186" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calculate force contribution</span></span>
+<span id="cb5-187"><a href="#cb5-187" aria-hidden="true" tabindex="-1"></a>        force <span class="op">=</span> coeff_value</span>
+<span id="cb5-188"><a href="#cb5-188" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> component <span class="kw">in</span> parts[<span class="dv">1</span>:]:</span>
+<span id="cb5-189"><a href="#cb5-189" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> component.startswith(<span class="st">'a'</span>) <span class="kw">and</span> <span class="bu">len</span>(component) <span class="op">&gt;</span> <span class="dv">1</span>:</span>
+<span id="cb5-190"><a href="#cb5-190" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Absolute value term (e.g., u|u|)</span></span>
+<span id="cb5-191"><a href="#cb5-191" aria-hidden="true" tabindex="-1"></a>                v_char <span class="op">=</span> component[<span class="dv">1</span>:]</span>
+<span id="cb5-192"><a href="#cb5-192" aria-hidden="true" tabindex="-1"></a>                force <span class="op">*=</span> <span class="bu">abs</span>(vel_map[v_char])</span>
+<span id="cb5-193"><a href="#cb5-193" aria-hidden="true" tabindex="-1"></a>            <span class="cf">elif</span> component <span class="kw">in</span> vel_map:</span>
+<span id="cb5-194"><a href="#cb5-194" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Regular term</span></span>
+<span id="cb5-195"><a href="#cb5-195" aria-hidden="true" tabindex="-1"></a>                force <span class="op">*=</span> vel_map[component]</span>
+<span id="cb5-196"><a href="#cb5-196" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb5-197"><a href="#cb5-197" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Add to force vector</span></span>
+<span id="cb5-198"><a href="#cb5-198" aria-hidden="true" tabindex="-1"></a>        F[<span class="va">self</span>.force_indices[force_dir]] <span class="op">+=</span> force</span>
+<span id="cb5-199"><a href="#cb5-199" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb5-200"><a href="#cb5-200" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> F</span>
+<span id="cb5-201"><a href="#cb5-201" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-202"><a href="#cb5-202" aria-hidden="true" tabindex="-1"></a><span class="fu">### Restoring Forces </span></span>
 <span id="cb5-203"><a href="#cb5-203" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-204"><a href="#cb5-204" aria-hidden="true" tabindex="-1"></a>$$g(\eta) = \begin{bmatrix} </span>
-<span id="cb5-205"><a href="#cb5-205" aria-hidden="true" tabindex="-1"></a>(W - B) \sin \theta <span class="sc">\\</span> </span>
-<span id="cb5-206"><a href="#cb5-206" aria-hidden="true" tabindex="-1"></a>-(W - B) \cos \theta \sin \phi <span class="sc">\\</span> </span>
-<span id="cb5-207"><a href="#cb5-207" aria-hidden="true" tabindex="-1"></a>-(W - B) \cos \theta \cos \phi <span class="sc">\\</span> </span>
-<span id="cb5-208"><a href="#cb5-208" aria-hidden="true" tabindex="-1"></a>-(y_G W - y_B B) \cos \theta \cos \phi + (z_G W - z_B B) \cos \theta \sin \phi <span class="sc">\\</span> </span>
-<span id="cb5-209"><a href="#cb5-209" aria-hidden="true" tabindex="-1"></a>(z_G W - z_B B) \sin \theta + (x_G W - x_B B) \cos \theta \cos \phi <span class="sc">\\</span> </span>
-<span id="cb5-210"><a href="#cb5-210" aria-hidden="true" tabindex="-1"></a>-(x_G W - x_B B) \cos \theta \sin \phi - (y_G W - y_B B) \sin \theta </span>
-<span id="cb5-211"><a href="#cb5-211" aria-hidden="true" tabindex="-1"></a>\end{bmatrix}$$</span>
-<span id="cb5-212"><a href="#cb5-212" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-213"><a href="#cb5-213" aria-hidden="true" tabindex="-1"></a>Where:</span>
+<span id="cb5-204"><a href="#cb5-204" aria-hidden="true" tabindex="-1"></a>The restoring forces ($g(\eta)$) include gravitational and buoyancy effects:</span>
+<span id="cb5-205"><a href="#cb5-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-206"><a href="#cb5-206" aria-hidden="true" tabindex="-1"></a>$$g(\eta) = \begin{bmatrix} </span>
+<span id="cb5-207"><a href="#cb5-207" aria-hidden="true" tabindex="-1"></a>(W - B) \sin \theta <span class="sc">\\</span> </span>
+<span id="cb5-208"><a href="#cb5-208" aria-hidden="true" tabindex="-1"></a>-(W - B) \cos \theta \sin \phi <span class="sc">\\</span> </span>
+<span id="cb5-209"><a href="#cb5-209" aria-hidden="true" tabindex="-1"></a>-(W - B) \cos \theta \cos \phi <span class="sc">\\</span> </span>
+<span id="cb5-210"><a href="#cb5-210" aria-hidden="true" tabindex="-1"></a>-(y_G W - y_B B) \cos \theta \cos \phi + (z_G W - z_B B) \cos \theta \sin \phi <span class="sc">\\</span> </span>
+<span id="cb5-211"><a href="#cb5-211" aria-hidden="true" tabindex="-1"></a>(z_G W - z_B B) \sin \theta + (x_G W - x_B B) \cos \theta \cos \phi <span class="sc">\\</span> </span>
+<span id="cb5-212"><a href="#cb5-212" aria-hidden="true" tabindex="-1"></a>-(x_G W - x_B B) \cos \theta \sin \phi - (y_G W - y_B B) \sin \theta </span>
+<span id="cb5-213"><a href="#cb5-213" aria-hidden="true" tabindex="-1"></a>\end{bmatrix}$$</span>
 <span id="cb5-214"><a href="#cb5-214" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-215"><a href="#cb5-215" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$W = mg$ is the weight</span>
-<span id="cb5-216"><a href="#cb5-216" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$B = \rho g \nabla$ is the buoyancy force (with $\nabla$ being the displaced volume)</span>
-<span id="cb5-217"><a href="#cb5-217" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$r_G = <span class="co">[</span><span class="ot">x_G, y_G, z_G</span><span class="co">]</span>^T$ is the center of gravity mentioned in the <span class="in">`geometry.yml`</span> input file</span>
-<span id="cb5-218"><a href="#cb5-218" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$r_B = <span class="co">[</span><span class="ot">x_B, y_B, z_B</span><span class="co">]</span>^T$ is the center of buoyancy mentioned in the <span class="in">`geometry.yml`</span> input file</span>
-<span id="cb5-219"><a href="#cb5-219" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-220"><a href="#cb5-220" aria-hidden="true" tabindex="-1"></a>| Function | Description |</span>
-<span id="cb5-221"><a href="#cb5-221" aria-hidden="true" tabindex="-1"></a>|----------|-------------|</span>
-<span id="cb5-222"><a href="#cb5-222" aria-hidden="true" tabindex="-1"></a>| <span class="in">`gravitational_forces(phi, theta)`</span> | Computes the gravitational and buoyancy forces and moments as a function of roll and pitch angles. |</span>
-<span id="cb5-223"><a href="#cb5-223" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-224"><a href="#cb5-224" aria-hidden="true" tabindex="-1"></a><span class="fu">### Control Forces </span></span>
+<span id="cb5-215"><a href="#cb5-215" aria-hidden="true" tabindex="-1"></a>Where:</span>
+<span id="cb5-216"><a href="#cb5-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-217"><a href="#cb5-217" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$W = mg$ is the weight</span>
+<span id="cb5-218"><a href="#cb5-218" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$B = \rho g \nabla$ is the buoyancy force (with $\nabla$ being the displaced volume)</span>
+<span id="cb5-219"><a href="#cb5-219" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$r_G = <span class="co">[</span><span class="ot">x_G, y_G, z_G</span><span class="co">]</span>^T$ is the center of gravity mentioned in the <span class="in">`geometry.yml`</span> input file</span>
+<span id="cb5-220"><a href="#cb5-220" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$r_B = <span class="co">[</span><span class="ot">x_B, y_B, z_B</span><span class="co">]</span>^T$ is the center of buoyancy mentioned in the <span class="in">`geometry.yml`</span> input file</span>
+<span id="cb5-221"><a href="#cb5-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-222"><a href="#cb5-222" aria-hidden="true" tabindex="-1"></a>| Function | Description |</span>
+<span id="cb5-223"><a href="#cb5-223" aria-hidden="true" tabindex="-1"></a>|----------|-------------|</span>
+<span id="cb5-224"><a href="#cb5-224" aria-hidden="true" tabindex="-1"></a>| <span class="in">`gravitational_forces(phi, theta)`</span> | Computes the gravitational and buoyancy forces and moments as a function of roll and pitch angles. |</span>
 <span id="cb5-225"><a href="#cb5-225" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-226"><a href="#cb5-226" aria-hidden="true" tabindex="-1"></a>The control forces vector $\tau$ represents the combined effect of control surfaces and thrusters.#### Control Surface Forces</span>
+<span id="cb5-226"><a href="#cb5-226" aria-hidden="true" tabindex="-1"></a><span class="fu">### Control Forces </span></span>
 <span id="cb5-227"><a href="#cb5-227" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-228"><a href="#cb5-228" aria-hidden="true" tabindex="-1"></a>| Function | Description |</span>
-<span id="cb5-229"><a href="#cb5-229" aria-hidden="true" tabindex="-1"></a>|----------|-------------|</span>
-<span id="cb5-230"><a href="#cb5-230" aria-hidden="true" tabindex="-1"></a>| <span class="in">`control_forces(delta)`</span> | Calculates forces and moments generated by control surfaces (rudders, fins, etc.) based on their deflection angles $\delta$. Supports both hydrodynamic coefficient-based and aerofoil-based calculation methods. |</span>
-<span id="cb5-231"><a href="#cb5-231" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-232"><a href="#cb5-232" aria-hidden="true" tabindex="-1"></a>For hydrodynamic coefficient-based calculation:</span>
-<span id="cb5-233"><a href="#cb5-233" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Forces are calculated as $\tau_i = C_{i\delta} \delta$, where $C_{i\delta}$ is the control coefficient mentioned in the <span class="in">`control_surface_hydrodynamics`</span> in the <span class="in">`control_surfaces.yml`</span> input file</span>
-<span id="cb5-234"><a href="#cb5-234" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-235"><a href="#cb5-235" aria-hidden="true" tabindex="-1"></a>For aerofoil-based calculation:</span>
+<span id="cb5-228"><a href="#cb5-228" aria-hidden="true" tabindex="-1"></a>The control forces vector $\tau$ represents the combined effect of control surfaces and thrusters.#### Control Surface Forces</span>
+<span id="cb5-229"><a href="#cb5-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-230"><a href="#cb5-230" aria-hidden="true" tabindex="-1"></a>| Function | Description |</span>
+<span id="cb5-231"><a href="#cb5-231" aria-hidden="true" tabindex="-1"></a>|----------|-------------|</span>
+<span id="cb5-232"><a href="#cb5-232" aria-hidden="true" tabindex="-1"></a>| <span class="in">`control_forces(delta)`</span> | Calculates forces and moments generated by control surfaces (rudders, fins, etc.) based on their deflection angles $\delta$. Supports both hydrodynamic coefficient-based and aerofoil-based calculation methods. |</span>
+<span id="cb5-233"><a href="#cb5-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-234"><a href="#cb5-234" aria-hidden="true" tabindex="-1"></a>For hydrodynamic coefficient-based calculation:</span>
+<span id="cb5-235"><a href="#cb5-235" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Forces are calculated as $\tau_i = C_{i\delta} \delta$, where $C_{i\delta}$ is the control coefficient mentioned in the <span class="in">`control_surface_hydrodynamics`</span> in the <span class="in">`control_surfaces.yml`</span> input file</span>
 <span id="cb5-236"><a href="#cb5-236" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-237"><a href="#cb5-237" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Local velocity at the control surface is calculated considering vessel motion (automatically done)</span>
-<span id="cb5-238"><a href="#cb5-238" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Angle of attack is determined from flow direction and surface deflection</span>
-<span id="cb5-239"><a href="#cb5-239" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Lift and drag forces are calculated using NACA airfoil data (path to the NACA file is mentioned in the <span class="in">`control_surfaces.yml`</span> input file)</span>
-<span id="cb5-240"><a href="#cb5-240" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Forces are transformed to the body frame and a generalized force vector is returned</span>
-<span id="cb5-241"><a href="#cb5-241" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-242"><a href="#cb5-242" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Thruster Forces</span></span>
+<span id="cb5-237"><a href="#cb5-237" aria-hidden="true" tabindex="-1"></a>For aerofoil-based calculation:</span>
+<span id="cb5-238"><a href="#cb5-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-239"><a href="#cb5-239" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Local velocity at the control surface is calculated considering vessel motion (automatically done)</span>
+<span id="cb5-240"><a href="#cb5-240" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Angle of attack is determined from flow direction and surface deflection</span>
+<span id="cb5-241"><a href="#cb5-241" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Lift and drag forces are calculated using NACA airfoil data (path to the NACA file is mentioned in the <span class="in">`control_surfaces.yml`</span> input file)</span>
+<span id="cb5-242"><a href="#cb5-242" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Forces are transformed to the body frame and a generalized force vector is returned</span>
 <span id="cb5-243"><a href="#cb5-243" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-244"><a href="#cb5-244" aria-hidden="true" tabindex="-1"></a>| Function | Description |</span>
-<span id="cb5-245"><a href="#cb5-245" aria-hidden="true" tabindex="-1"></a>|----------|-------------|</span>
-<span id="cb5-246"><a href="#cb5-246" aria-hidden="true" tabindex="-1"></a>| <span class="in">`thruster_forces(n_prop)`</span> | Calculates forces and moments from propellers/thrusters based on their rotational speeds $n$ in RPM. Models thrust using propeller theory with advance ratio and thrust coefficients. |</span>
-<span id="cb5-247"><a href="#cb5-247" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-248"><a href="#cb5-248" aria-hidden="true" tabindex="-1"></a>The thrust calculation follows the form:</span>
-<span id="cb5-249"><a href="#cb5-249" aria-hidden="true" tabindex="-1"></a>$$X_{prop} = K_T \rho D^4 |n| n$$</span>
-<span id="cb5-250"><a href="#cb5-250" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-251"><a href="#cb5-251" aria-hidden="true" tabindex="-1"></a>Where:</span>
+<span id="cb5-244"><a href="#cb5-244" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Thruster Forces</span></span>
+<span id="cb5-245"><a href="#cb5-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-246"><a href="#cb5-246" aria-hidden="true" tabindex="-1"></a>| Function | Description |</span>
+<span id="cb5-247"><a href="#cb5-247" aria-hidden="true" tabindex="-1"></a>|----------|-------------|</span>
+<span id="cb5-248"><a href="#cb5-248" aria-hidden="true" tabindex="-1"></a>| <span class="in">`thruster_forces(n_prop)`</span> | Calculates forces and moments from propellers/thrusters based on their rotational speeds $n$ in RPM. Models thrust using propeller theory with advance ratio and thrust coefficients. |</span>
+<span id="cb5-249"><a href="#cb5-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-250"><a href="#cb5-250" aria-hidden="true" tabindex="-1"></a>The thrust calculation follows the form:</span>
+<span id="cb5-251"><a href="#cb5-251" aria-hidden="true" tabindex="-1"></a>$$X_{prop} = K_T \rho D^4 |n| n$$</span>
 <span id="cb5-252"><a href="#cb5-252" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-253"><a href="#cb5-253" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$K_T$ is the thrust coefficient (approximated as $K_{T,J=0}(1-J)$ with $J$ being the advance ratio)</span>
-<span id="cb5-254"><a href="#cb5-254" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$\rho$ is the water density</span>
-<span id="cb5-255"><a href="#cb5-255" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$D$ is the propeller diameter</span>
-<span id="cb5-256"><a href="#cb5-256" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$n$ is the propeller speed in revolutions per second</span>
-<span id="cb5-257"><a href="#cb5-257" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-258"><a href="#cb5-258" aria-hidden="true" tabindex="-1"></a><span class="fu">## Vessel ODE and Simulation</span></span>
+<span id="cb5-253"><a href="#cb5-253" aria-hidden="true" tabindex="-1"></a>Where:</span>
+<span id="cb5-254"><a href="#cb5-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-255"><a href="#cb5-255" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$K_T$ is the thrust coefficient (approximated as $K_{T,J=0}(1-J)$ with $J$ being the advance ratio)</span>
+<span id="cb5-256"><a href="#cb5-256" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$\rho$ is the water density</span>
+<span id="cb5-257"><a href="#cb5-257" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$D$ is the propeller diameter</span>
+<span id="cb5-258"><a href="#cb5-258" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$n$ is the propeller speed in revolutions per second</span>
 <span id="cb5-259"><a href="#cb5-259" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-260"><a href="#cb5-260" aria-hidden="true" tabindex="-1"></a>The vessel dynamics are implemented as an ordinary differential equation (ODE) in the <span class="in">`vessel_ode(t, state)`</span> method, which computes the state derivatives:</span>
+<span id="cb5-260"><a href="#cb5-260" aria-hidden="true" tabindex="-1"></a><span class="fu">## Vessel ODE and Simulation</span></span>
 <span id="cb5-261"><a href="#cb5-261" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-262"><a href="#cb5-262" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
-<span id="cb5-263"><a href="#cb5-263" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> vessel_ode(<span class="va">self</span>, t, state):</span>
-<span id="cb5-264"><a href="#cb5-264" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract state components</span></span>
-<span id="cb5-265"><a href="#cb5-265" aria-hidden="true" tabindex="-1"></a>    vel <span class="op">=</span> state[<span class="dv">0</span>:<span class="dv">6</span>]  <span class="co"># [u, v, w, p, q, r]</span></span>
-<span id="cb5-266"><a href="#cb5-266" aria-hidden="true" tabindex="-1"></a>    pos <span class="op">=</span> state[<span class="dv">6</span>:<span class="dv">9</span>]  <span class="co"># [x, y, z]</span></span>
-<span id="cb5-267"><a href="#cb5-267" aria-hidden="true" tabindex="-1"></a>    angles <span class="op">=</span> state[<span class="dv">9</span>:attitude_end]  <span class="co"># [phi, theta, psi] or quaternion</span></span>
-<span id="cb5-268"><a href="#cb5-268" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-269"><a href="#cb5-269" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate forces and moments</span></span>
-<span id="cb5-270"><a href="#cb5-270" aria-hidden="true" tabindex="-1"></a>    F_hyd <span class="op">=</span> <span class="va">self</span>.hydrodynamic_forces(vel)</span>
-<span id="cb5-271"><a href="#cb5-271" aria-hidden="true" tabindex="-1"></a>    F_control <span class="op">=</span> <span class="va">self</span>.control_forces(state[control_start:thruster_start])</span>
-<span id="cb5-272"><a href="#cb5-272" aria-hidden="true" tabindex="-1"></a>    F_thrust <span class="op">=</span> <span class="va">self</span>.thruster_forces(state[thruster_start:])</span>
-<span id="cb5-273"><a href="#cb5-273" aria-hidden="true" tabindex="-1"></a>    F_g <span class="op">=</span> <span class="va">self</span>.gravitational_forces(angles[<span class="dv">0</span>], angles[<span class="dv">1</span>])</span>
-<span id="cb5-274"><a href="#cb5-274" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-275"><a href="#cb5-275" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="va">self</span>.coriolis_flag:</span>
-<span id="cb5-276"><a href="#cb5-276" aria-hidden="true" tabindex="-1"></a>        C_RB, C_A <span class="op">=</span> <span class="va">self</span>.calculate_coriolis_matrices(vel)</span>
-<span id="cb5-277"><a href="#cb5-277" aria-hidden="true" tabindex="-1"></a>        F_C <span class="op">=</span> (C_RB <span class="op">+</span> C_A) <span class="op">@</span> vel</span>
-<span id="cb5-278"><a href="#cb5-278" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb5-279"><a href="#cb5-279" aria-hidden="true" tabindex="-1"></a>        F_C <span class="op">=</span> np.zeros(<span class="dv">6</span>)</span>
-<span id="cb5-280"><a href="#cb5-280" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-281"><a href="#cb5-281" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Total force</span></span>
-<span id="cb5-282"><a href="#cb5-282" aria-hidden="true" tabindex="-1"></a>    F <span class="op">=</span> F_hyd <span class="op">+</span> F_control <span class="op">+</span> F_thrust <span class="op">-</span> F_g <span class="op">-</span> F_C</span>
-<span id="cb5-283"><a href="#cb5-283" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-284"><a href="#cb5-284" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate velocity derivatives</span></span>
-<span id="cb5-285"><a href="#cb5-285" aria-hidden="true" tabindex="-1"></a>    M <span class="op">=</span> <span class="va">self</span>.mass_matrix <span class="op">+</span> <span class="va">self</span>.added_mass_matrix  <span class="co"># Total mass matrix</span></span>
-<span id="cb5-286"><a href="#cb5-286" aria-hidden="true" tabindex="-1"></a>    state_dot[<span class="dv">0</span>:<span class="dv">6</span>] <span class="op">=</span> np.linalg.inv(M) <span class="op">@</span> F</span>
-<span id="cb5-287"><a href="#cb5-287" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-288"><a href="#cb5-288" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate position and attitude derivatives</span></span>
-<span id="cb5-289"><a href="#cb5-289" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ...</span></span>
-<span id="cb5-290"><a href="#cb5-290" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-291"><a href="#cb5-291" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> state_dot</span>
-<span id="cb5-292"><a href="#cb5-292" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb5-293"><a href="#cb5-293" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-294"><a href="#cb5-294" aria-hidden="true" tabindex="-1"></a>| Function | Description |</span>
-<span id="cb5-295"><a href="#cb5-295" aria-hidden="true" tabindex="-1"></a>|----------|-------------|</span>
-<span id="cb5-296"><a href="#cb5-296" aria-hidden="true" tabindex="-1"></a>| <span class="in">`step()`</span> | Advances the simulation by one time step by solving the ODE using SciPy's <span class="in">`solve_ivp`</span>. |</span>
-<span id="cb5-297"><a href="#cb5-297" aria-hidden="true" tabindex="-1"></a>| <span class="in">`simulate()`</span> | Runs the full simulation by repeatedly calling <span class="in">`step()`</span> until the final time. |</span>
-<span id="cb5-298"><a href="#cb5-298" aria-hidden="true" tabindex="-1"></a>| <span class="in">`reset()`</span> | Resets the vessel to its initial state. |</span>
-<span id="cb5-299"><a href="#cb5-299" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-300"><a href="#cb5-300" aria-hidden="true" tabindex="-1"></a><span class="fu">## Helper Methods and Utilities</span></span>
+<span id="cb5-262"><a href="#cb5-262" aria-hidden="true" tabindex="-1"></a>The vessel dynamics are implemented as an ordinary differential equation (ODE) in the <span class="in">`vessel_ode(t, state)`</span> method, which computes the state derivatives:</span>
+<span id="cb5-263"><a href="#cb5-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-264"><a href="#cb5-264" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
+<span id="cb5-265"><a href="#cb5-265" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> vessel_ode(<span class="va">self</span>, t, state):</span>
+<span id="cb5-266"><a href="#cb5-266" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract state components</span></span>
+<span id="cb5-267"><a href="#cb5-267" aria-hidden="true" tabindex="-1"></a>    vel <span class="op">=</span> state[<span class="dv">0</span>:<span class="dv">6</span>]  <span class="co"># [u, v, w, p, q, r]</span></span>
+<span id="cb5-268"><a href="#cb5-268" aria-hidden="true" tabindex="-1"></a>    pos <span class="op">=</span> state[<span class="dv">6</span>:<span class="dv">9</span>]  <span class="co"># [x, y, z]</span></span>
+<span id="cb5-269"><a href="#cb5-269" aria-hidden="true" tabindex="-1"></a>    angles <span class="op">=</span> state[<span class="dv">9</span>:attitude_end]  <span class="co"># [phi, theta, psi] or quaternion</span></span>
+<span id="cb5-270"><a href="#cb5-270" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-271"><a href="#cb5-271" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate forces and moments</span></span>
+<span id="cb5-272"><a href="#cb5-272" aria-hidden="true" tabindex="-1"></a>    F_hyd <span class="op">=</span> <span class="va">self</span>.hydrodynamic_forces(vel)</span>
+<span id="cb5-273"><a href="#cb5-273" aria-hidden="true" tabindex="-1"></a>    F_control <span class="op">=</span> <span class="va">self</span>.control_forces(state[control_start:thruster_start])</span>
+<span id="cb5-274"><a href="#cb5-274" aria-hidden="true" tabindex="-1"></a>    F_thrust <span class="op">=</span> <span class="va">self</span>.thruster_forces(state[thruster_start:])</span>
+<span id="cb5-275"><a href="#cb5-275" aria-hidden="true" tabindex="-1"></a>    F_g <span class="op">=</span> <span class="va">self</span>.gravitational_forces(angles[<span class="dv">0</span>], angles[<span class="dv">1</span>])</span>
+<span id="cb5-276"><a href="#cb5-276" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-277"><a href="#cb5-277" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="va">self</span>.coriolis_flag:</span>
+<span id="cb5-278"><a href="#cb5-278" aria-hidden="true" tabindex="-1"></a>        C_RB, C_A <span class="op">=</span> <span class="va">self</span>.calculate_coriolis_matrices(vel)</span>
+<span id="cb5-279"><a href="#cb5-279" aria-hidden="true" tabindex="-1"></a>        F_C <span class="op">=</span> (C_RB <span class="op">+</span> C_A) <span class="op">@</span> vel</span>
+<span id="cb5-280"><a href="#cb5-280" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb5-281"><a href="#cb5-281" aria-hidden="true" tabindex="-1"></a>        F_C <span class="op">=</span> np.zeros(<span class="dv">6</span>)</span>
+<span id="cb5-282"><a href="#cb5-282" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-283"><a href="#cb5-283" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Total force</span></span>
+<span id="cb5-284"><a href="#cb5-284" aria-hidden="true" tabindex="-1"></a>    F <span class="op">=</span> F_hyd <span class="op">+</span> F_control <span class="op">+</span> F_thrust <span class="op">-</span> F_g <span class="op">-</span> F_C</span>
+<span id="cb5-285"><a href="#cb5-285" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-286"><a href="#cb5-286" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate velocity derivatives</span></span>
+<span id="cb5-287"><a href="#cb5-287" aria-hidden="true" tabindex="-1"></a>    M <span class="op">=</span> <span class="va">self</span>.mass_matrix <span class="op">+</span> <span class="va">self</span>.added_mass_matrix  <span class="co"># Total mass matrix</span></span>
+<span id="cb5-288"><a href="#cb5-288" aria-hidden="true" tabindex="-1"></a>    state_dot[<span class="dv">0</span>:<span class="dv">6</span>] <span class="op">=</span> np.linalg.inv(M) <span class="op">@</span> F</span>
+<span id="cb5-289"><a href="#cb5-289" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-290"><a href="#cb5-290" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate position and attitude derivatives</span></span>
+<span id="cb5-291"><a href="#cb5-291" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ...</span></span>
+<span id="cb5-292"><a href="#cb5-292" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-293"><a href="#cb5-293" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> state_dot</span>
+<span id="cb5-294"><a href="#cb5-294" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-295"><a href="#cb5-295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-296"><a href="#cb5-296" aria-hidden="true" tabindex="-1"></a>| Function | Description |</span>
+<span id="cb5-297"><a href="#cb5-297" aria-hidden="true" tabindex="-1"></a>|----------|-------------|</span>
+<span id="cb5-298"><a href="#cb5-298" aria-hidden="true" tabindex="-1"></a>| <span class="in">`step()`</span> | Advances the simulation by one time step by solving the ODE using SciPy's <span class="in">`solve_ivp`</span>. |</span>
+<span id="cb5-299"><a href="#cb5-299" aria-hidden="true" tabindex="-1"></a>| <span class="in">`simulate()`</span> | Runs the full simulation by repeatedly calling <span class="in">`step()`</span> until the final time. |</span>
+<span id="cb5-300"><a href="#cb5-300" aria-hidden="true" tabindex="-1"></a>| <span class="in">`reset()`</span> | Resets the vessel to its initial state. |</span>
 <span id="cb5-301"><a href="#cb5-301" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-302"><a href="#cb5-302" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dimensionalization</span></span>
+<span id="cb5-302"><a href="#cb5-302" aria-hidden="true" tabindex="-1"></a><span class="fu">## Helper Methods and Utilities</span></span>
 <span id="cb5-303"><a href="#cb5-303" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-304"><a href="#cb5-304" aria-hidden="true" tabindex="-1"></a>Hydrodynamic coefficients can be provided in non-dimensional form and converted to dimensional form:</span>
+<span id="cb5-304"><a href="#cb5-304" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dimensionalization</span></span>
 <span id="cb5-305"><a href="#cb5-305" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-306"><a href="#cb5-306" aria-hidden="true" tabindex="-1"></a>| Function | Description |</span>
-<span id="cb5-307"><a href="#cb5-307" aria-hidden="true" tabindex="-1"></a>|----------|-------------|</span>
-<span id="cb5-308"><a href="#cb5-308" aria-hidden="true" tabindex="-1"></a>| <span class="in">`_dimensionalize_coefficients(rho, L, U)`</span> | Converts non-dimensional hydrodynamic coefficients to dimensional form based on density $\rho$, length $L$, and characteristic velocity $U$ (mentioned in the <span class="in">`simulation_input.yml`</span> file) |</span>
-<span id="cb5-309"><a href="#cb5-309" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-310"><a href="#cb5-310" aria-hidden="true" tabindex="-1"></a><span class="fu">### Hydrodynamic Coefficient Calculation</span></span>
+<span id="cb5-306"><a href="#cb5-306" aria-hidden="true" tabindex="-1"></a>Hydrodynamic coefficients can be provided in non-dimensional form and converted to dimensional form:</span>
+<span id="cb5-307"><a href="#cb5-307" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-308"><a href="#cb5-308" aria-hidden="true" tabindex="-1"></a>| Function | Description |</span>
+<span id="cb5-309"><a href="#cb5-309" aria-hidden="true" tabindex="-1"></a>|----------|-------------|</span>
+<span id="cb5-310"><a href="#cb5-310" aria-hidden="true" tabindex="-1"></a>| <span class="in">`_dimensionalize_coefficients(rho, L, U)`</span> | Converts non-dimensional hydrodynamic coefficients to dimensional form based on density $\rho$, length $L$, and characteristic velocity $U$ (mentioned in the <span class="in">`simulation_input.yml`</span> file) |</span>
 <span id="cb5-311"><a href="#cb5-311" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-312"><a href="#cb5-312" aria-hidden="true" tabindex="-1"></a>| Function | Description |</span>
-<span id="cb5-313"><a href="#cb5-313" aria-hidden="true" tabindex="-1"></a>|----------|-------------|</span>
-<span id="cb5-314"><a href="#cb5-314" aria-hidden="true" tabindex="-1"></a>| <span class="in">`calculate_added_mass_from_hydra(hydra_file)`</span> | Calculates the added mass matrix from HydRA data files. |</span>
-<span id="cb5-315"><a href="#cb5-315" aria-hidden="true" tabindex="-1"></a>| <span class="in">`cross_flow_drag()`</span> | Estimates sway-yaw hydrodynamic coefficients using strip theory. |</span>
-<span id="cb5-316"><a href="#cb5-316" aria-hidden="true" tabindex="-1"></a>| <span class="in">`cross_flow_drag_AUV()`</span> | Estimates both sway-yaw and heave-pitch coefficients for underwater vehicles. |</span>
-<span id="cb5-317"><a href="#cb5-317" aria-hidden="true" tabindex="-1"></a>| <span class="in">`hoerner()`</span> | Implements Hoerner's method for 2D section drag coefficient calculation. |</span>
-<span id="cb5-318"><a href="#cb5-318" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-319"><a href="#cb5-319" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-320"><a href="#cb5-320" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
-<span id="cb5-321"><a href="#cb5-321" aria-hidden="true" tabindex="-1"></a>Understanding these dynamics components is essential for correctly configuring vessel parameters and interpreting simulation results. The implementation allows for flexible modeling of different vessel types by adjusting the parameters and coefficients.</span>
-<span id="cb5-322"><a href="#cb5-322" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb5-323"><a href="#cb5-323" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-324"><a href="#cb5-324" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-312"><a href="#cb5-312" aria-hidden="true" tabindex="-1"></a><span class="fu">### Hydrodynamic Coefficient Calculation</span></span>
+<span id="cb5-313"><a href="#cb5-313" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-314"><a href="#cb5-314" aria-hidden="true" tabindex="-1"></a>| Function | Description |</span>
+<span id="cb5-315"><a href="#cb5-315" aria-hidden="true" tabindex="-1"></a>|----------|-------------|</span>
+<span id="cb5-316"><a href="#cb5-316" aria-hidden="true" tabindex="-1"></a>| <span class="in">`calculate_added_mass_from_hydra(hydra_file)`</span> | Calculates the added mass matrix from HydRA data files. |</span>
+<span id="cb5-317"><a href="#cb5-317" aria-hidden="true" tabindex="-1"></a>| <span class="in">`cross_flow_drag()`</span> | Estimates sway-yaw hydrodynamic coefficients using strip theory. |</span>
+<span id="cb5-318"><a href="#cb5-318" aria-hidden="true" tabindex="-1"></a>| <span class="in">`cross_flow_drag_AUV()`</span> | Estimates both sway-yaw and heave-pitch coefficients for underwater vehicles. |</span>
+<span id="cb5-319"><a href="#cb5-319" aria-hidden="true" tabindex="-1"></a>| <span class="in">`hoerner()`</span> | Implements Hoerner's method for 2D section drag coefficient calculation. |</span>
+<span id="cb5-320"><a href="#cb5-320" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-321"><a href="#cb5-321" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-322"><a href="#cb5-322" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
+<span id="cb5-323"><a href="#cb5-323" aria-hidden="true" tabindex="-1"></a>Understanding these dynamics components is essential for correctly configuring vessel parameters and interpreting simulation results. The implementation allows for flexible modeling of different vessel types by adjusting the parameters and coefficients.</span>
+<span id="cb5-324"><a href="#cb5-324" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb5-325"><a href="#cb5-325" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-326"><a href="#cb5-326" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-327"><a href="#cb5-327" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-328"><a href="#cb5-328" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-329"><a href="#cb5-329" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-330"><a href="#cb5-330" aria-hidden="true" tabindex="-1"></a></span>
 </code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
